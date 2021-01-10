@@ -17,8 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/admin', 'HomeController@index')->middleware(['admin','auth']);
-
+Route::get('/admin', 'HomeController@index')->middleware(['admin','auth'])->name('admin');
+Route::resource('tempat', 'TempatController');
 
 
 

@@ -14,7 +14,7 @@ class TempatController extends Controller
      */
     public function index()
     {
-        //
+        return view('backend/tempat/tempat');
     }
 
     /**
@@ -24,7 +24,7 @@ class TempatController extends Controller
      */
     public function create()
     {
-        //
+        return view('backend/tempat/create');
     }
 
     /**
