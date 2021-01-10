@@ -64,7 +64,7 @@
           <li class="nav-item">
             <a class="nav-link" href="#">
               <span data-feather="file"></span>
-              Tambah Tempat
+              Tempat Wisata
             </a>
           </li>
           <li class="nav-item">
@@ -76,7 +76,7 @@
           <li class="nav-item">
             <a class="nav-link" href="#">
               <span data-feather="users"></span>
-              Daftar Pengguna
+              Pengguna
             </a>
           </li>
           <li class="nav-item">
