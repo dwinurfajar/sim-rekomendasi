@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\tempat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TempatController extends Controller
 {
@@ -14,7 +15,8 @@ class TempatController extends Controller
      */
     public function index()
     {
-        return view('backend/tempat/tempat');
+        $tempat = DB::table('tempats')->get();
+        return view('backend/tempat/tempat', compact('tempat'));
     }
 
     /**
@@ -35,7 +37,27 @@ class TempatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama' => 'required',
+            'lokasi' => 'required',
+            'kategori' => 'required',
+            'deskripsi' => 'required',
+            'thumbnail' => 'image|required|max:1024',
+        ]);
+
+        $tempat = new tempat;
+        $tempat->nama = $request->nama;
+        $tempat->lokasi = $request->lokasi;
+        $tempat->kategori = $request->kategori;
+        $tempat->deskripsi = $request->deskripsi;
+        $tempat->thumbnail = $request->nama;
+        $tempat->save();
+
+        if($request->hasFile('thumbnail')){
+            $request->file('thumbnail')->move('thumbnails', $request->nama);
+        } 
+
+        return view('backend/tempat/create');
     }
 
     /**
@@ -46,7 +68,7 @@ class TempatController extends Controller
      */
     public function show(tempat $tempat)
     {
-        //
+        echo "asdasda";
     }
 
     /**
@@ -57,7 +79,10 @@ class TempatController extends Controller
      */
     public function edit(tempat $tempat)
     {
-        //
+        //echo $tempat->nama;
+        $tempat = DB::table('tempats')->where('id', $tempat->id)->first();
+        //dd($tempat);
+        return view('backend/tempat/edit', compact('tempat'));
     }
 
     /**

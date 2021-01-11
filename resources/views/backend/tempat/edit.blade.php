@@ -1,11 +1,12 @@
 @extends('backend/master')
-@section('title', 'Tambah Tempat')
+@section('title', 'Edit Tempat')
 @section('content')
-<form method="post" action="{{route('tempat.store')}}" enctype="multipart/form-data">
+<form method="post" action="{{route('tempat.update', $tempat->nama)}}" enctype="multipart/form-data">
 	@csrf
+  @method('PATCH')
 	<div class="mb-3 mt-3">
   		<label  class="form-label">Nama Tempat</label>
-  		<input type="text"  class="form-control @error('nama') is-invalid @enderror" name="nama">
+  		<input type="text"  class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{$tempat->nama}}">
   		@error('nama')
             <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
@@ -14,7 +15,7 @@
 	</div>
 	<div class="mb-3 mt-3">
   		<label class="form-label">Lokasi</label>
-  		<input type="text" class="form-control @error('lokasi') is-invalid @enderror" name="lokasi">
+  		<input type="text" class="form-control @error('lokasi') is-invalid @enderror" name="lokasi" value="{{$tempat->lokasi}}">
   		@error('lokasi')
             <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
@@ -23,7 +24,7 @@
 	</div>
 	<div class="mb-3 mt-3">
   		<label class="form-label">Kategori</label>
-  		<input type="text" class="form-control @error('kategori') is-invalid @enderror" name="kategori">
+  		<input type="text" class="form-control @error('kategori') is-invalid @enderror" name="kategori" value="{{$tempat->kategori}}">
   		@error('kategori')
             <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
@@ -32,7 +33,7 @@
 	</div>
 	<div class="mb-3">
   		<label class="form-label">Deskripsi</label>
-  		<textarea class="form-control @error('deskripsi') is-invalid @enderror" name="deskripsi" rows="15"></textarea>
+  		<textarea class="form-control @error('deskripsi') is-invalid @enderror" name="deskripsi" rows="15" >{{$tempat->deskripsi}}</textarea>
   		@error('deskripsi')
             <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>

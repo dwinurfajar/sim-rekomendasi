@@ -39,7 +39,7 @@
   <body>
     
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Visit Jogja</a>
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Dynatic Corp</a>
 
   
 
@@ -48,7 +48,11 @@
   </button>
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
-      <a class="nav-link" href="#">Sign out</a>
+      <span class="p-2 text-light">{{ Auth::user()->name }} </span>
+      <a class="p-2 text-light" href="{{ route('logout') }}"onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+      @csrf
+      </form>
     </li>
   </ul>
   
@@ -60,7 +64,7 @@
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link " href="{{route('admin')}}">
+            <a class="nav-link " href="#">
               <span data-feather="home"></span>
               Dashboard
             </a>
@@ -78,21 +82,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="">
+            <a class="nav-link" href="{{route('user')}}">
               <span data-feather="users"></span>
               Pengguna
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-              Integrations
             </a>
           </li>
         </ul>

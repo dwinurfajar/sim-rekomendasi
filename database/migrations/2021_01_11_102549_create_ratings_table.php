@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTempatsTable extends Migration
+class CreateRatingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateTempatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tempats', function (Blueprint $table) {
+        Schema::create('ratings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama');
-            $table->string('lokasi');
-            $table->char('kategori');
-            $table->text('deskripsi');
-            $table->string('thumbnail')->default('default-thumbnail.png');
+            $table->integer('place_id');
+            $table->integer('user_id');
+            $table->integer('nilai');
+            $table->text('ulasan');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateTempatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tempats');
+        Schema::dropIfExists('ratings');
     }
 }

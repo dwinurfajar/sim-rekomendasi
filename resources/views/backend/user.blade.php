@@ -7,23 +7,15 @@
   <table id="dataTable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>Nama Tempat</th>
-                <th>Lokasi</th>
-                <th>Kategori</th>
-                <th>Aksi</th>
+                <th>Username</th>
+                <th>Email</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($tempat as $tmt)
+            @foreach ($user as $usr)
             <tr>
-                <td>{{$tmt->nama}}</td>
-                <td>{{$tmt->lokasi}}</td>
-                <td>{{$tmt->kategori}}</td>
-                <td>
-                    <a type="button" href="{{route('tempat.show', $tmt->id)}}" style="color: blue;"><span data-feather="eye"></span></a>
-                    <a type="button" href="{{route('tempat.edit', $tmt->id)}}" style="color:green;"><span data-feather="edit"></span></a>
-                    <a type="button" href="#" style="color:red;"><span data-feather="delete"></span></a>
-                </td>
+                <td>{{$usr->name}}</td>
+                <td>{{$usr->email}}</td>
             </tr>
             @endforeach
         </tbody>
