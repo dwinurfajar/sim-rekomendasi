@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Rating;
+use App\User;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RatingController extends Controller
 {
@@ -35,9 +38,24 @@ class RatingController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $user = Auth::user();
+        $request->validate([
+            'place_id' => 'required',
+            'nilai' => 'required',
+            'ulasan' => 'required',
+        ]);
 
+        $rating = new Rating;
+        $rating->place_id = $request->place_id;
+        $rating->user_id = $user->id;
+        $rating->nilai = $request->nilai;
+        $rating->ulasan = $request->ulasan;
+        $rating->save();
+
+        //return redirect('/detail/$request->id');
+        return back();
+        
+    }
     /**
      * Display the specified resource.
      *

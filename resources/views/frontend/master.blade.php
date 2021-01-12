@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.79.0">
-    <title>Osass</title>
+    <title>@yield('title')</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/pricing/">
 
@@ -33,14 +33,13 @@
 
     
     <!-- Custom styles for this template -->
-    <link href="pricing.css" rel="stylesheet">
   </head>
   <body>
     
 <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
   <p class="h5 my-0 me-md-auto fw-normal">Dynatic Corp</p>
   <nav class="my-2 my-md-0 me-md-3">
-    <a class="p-2 text-dark" href="#">Beranda</a>
+    <a class="p-2 text-dark" href="{{url('/')}}">Beranda</a>
     <a class="p-2 text-dark" href="#">Wisata</a>
     <a class="p-2 text-dark" href="#">Kategori</a>
     <a class="p-2 text-dark" href="#">Tentang</a>

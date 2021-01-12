@@ -19,6 +19,8 @@ Auth::routes();
 Route::resource('tempat', 'TempatController')->middleware(['admin','auth']);
 Route::get('/user', 'HomeController@user')->name('user');
 
+Route::resource('rating', 'RatingController')->middleware(['auth']);
+
 //Route::get('/tempat/{nama}/edit', 'TempatController@edit');
 
 
