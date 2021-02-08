@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTempatsTable extends Migration
+class CreateKategorisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,9 @@ class CreateTempatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tempats', function (Blueprint $table) {
+        Schema::create('kategoris', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama');
-            $table->string('lokasi');
-            $table->integer('kategori');
-            $table->text('deskripsi');
-            $table->string('thumbnail')->default('default-thumbnail.png');
-            $table->boolean('konfirmasi')->default('0');
+            $table->string('kategori');
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ class CreateTempatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tempats');
+        Schema::dropIfExists('kategoris');
     }
 }

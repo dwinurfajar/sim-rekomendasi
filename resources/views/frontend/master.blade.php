@@ -14,6 +14,12 @@
 <link href="{{asset('frontend/css/bootstrap.min.css')}}" rel="stylesheet">
 <link href="{{asset('frontend/css/star.css')}}" rel="stylesheet">
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+
 
     <style>
       .bd-placeholder-img {
@@ -30,6 +36,11 @@
         }
       }
     </style>
+    <style>
+      .checked {
+        color: orange;
+      }
+    </style><!--star -->
 
     
     <!-- Custom styles for this template -->
@@ -37,23 +48,43 @@
   <body>
     
 <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-  <p class="h5 my-0 me-md-auto fw-normal">Dynatic Corp</p>
-  <nav class="my-2 my-md-0 me-md-3">
+  <p class="h5 my-0 me-md-auto fw-normal">DWISATA</p>
+
+  <nav class="my-2 my-md-0 me-md-3 navbar">
+
     <a class="p-2 text-dark" href="{{url('/')}}">Beranda</a>
-    <a class="p-2 text-dark" href="#">Wisata</a>
-    <a class="p-2 text-dark" href="#">Kategori</a>
+    <div class="p-2 dropdown">
+      <a class="text-dark dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" >
+        Kategori
+      </a>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <a class="dropdown-item" href="#">Rekomendasi</a>
+        @foreach ($kategori as $ktg)
+          <a class="dropdown-item" href="{{route('kategori', $ktg->id)}}">{{$ktg->kategori}}</a>
+        @endforeach
+      </div>
+    </div> 
     <a class="p-2 text-dark" href="#">Tentang</a>
+
     @guest
       <a class="p-2 text-dark" href="{{ route('login') }}">{{ __('Login') }}</a>
     @if (Route::has('register'))
                                     <a class="p-2 text-dark" href="{{ route('register') }}">{{ __('Register') }}</a>
     @endif
     @else
-      <span class="p-2 text-dark">{{ Auth::user()->name }} </span>
-      <a class="p-2 text-dark" href="{{ route('logout') }}"onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
-      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-      @csrf
-      </form>
+      <a class="p-2 text-dark" href="{{route('tambah')}}">Tambah Tempat</a>
+      <div class="p-2 dropdown">
+        <a class="text-dark dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" >
+         <i class="fas fa-user-alt"></i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="#">{{ Auth::user()->name }}</a>
+          <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+          @csrf
+          </form>
+        </div>
+      </div>
     @endguest
 
   </nav>
@@ -106,10 +137,27 @@
   </body>
   <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
-  <script src="{{asset('backend/js/dashboard.js')}}"></script>
-  <script type="text/javascript">
-    $(function() {
-          $('span.stars').stars();
-      });
-  </script>
+
+
+  <script>
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
 </html>

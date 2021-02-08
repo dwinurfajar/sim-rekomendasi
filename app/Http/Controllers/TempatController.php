@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Rating;
 use App\tempat;
+use App\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,8 +17,21 @@ class TempatController extends Controller
      */
     public function index()
     {
-        $tempat = DB::table('tempats')->get();
-        return view('backend/tempat/tempat', compact('tempat'));
+
+
+        
+        $tempat = DB::table('tempats')
+                    ->join('kategoris', 'tempats.kategori', '=', 'kategoris.id')
+                    ->select('tempats.*', 'kategoris.kategori as ktg')
+                    ->where('tempats.konfirmasi', '1')
+                    ->get();
+
+        $unconfirmed = DB::table('tempats')
+                    ->join('kategoris', 'tempats.kategori', '=', 'kategoris.id')
+                    ->select('tempats.*', 'kategoris.kategori as ktg')
+                    ->where('tempats.konfirmasi', '0')
+                    ->get();
+        return view('backend/tempat/tempat', compact('tempat', 'unconfirmed'));
     }
 
     /**
@@ -26,7 +41,13 @@ class TempatController extends Controller
      */
     public function create()
     {
-        return view('backend/tempat/create');
+        $kategori = Kategori::latest()->get();
+        return view('backend/tempat/create', compact('kategori'));
+    }
+    public function userCreate()
+    {
+        $kategori = Kategori::latest()->get();
+        return view('frontend/create', compact('kategori'));
     }
 
     /**
@@ -54,10 +75,33 @@ class TempatController extends Controller
         $tempat->save();
 
         if($request->hasFile('thumbnail')){
-            $request->file('thumbnail')->move('thumbnails', $request->nama);
+            $request->file('thumbnail')->move('thumbnails', $request->thumbnail);
+        } 
+        return redirect('/tempat');
+    }
+    public function userStore(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required',
+            'lokasi' => 'required',
+            'kategori' => 'required',
+            'deskripsi' => 'required',
+            'thumbnail' => 'image|required|max:1024',
+        ]);
+
+        $tempat = new tempat;
+        $tempat->nama = $request->nama;
+        $tempat->lokasi = $request->lokasi;
+        $tempat->kategori = $request->kategori;
+        $tempat->deskripsi = $request->deskripsi;
+        $tempat->thumbnail = $request->nama;
+        $tempat->save();
+
+        if($request->hasFile('thumbnail')){
+            $request->file('thumbnail')->move('thumbnails', $request->thumbnail);
         } 
 
-        return view('backend/tempat/create');
+        return redirect('/');
     }
 
     /**
@@ -79,10 +123,11 @@ class TempatController extends Controller
      */
     public function edit(tempat $tempat)
     {
-        //echo $tempat->nama;
         $tempat = DB::table('tempats')->where('id', $tempat->id)->first();
-        //dd($tempat);
-        return view('backend/tempat/edit', compact('tempat'));
+        $kategori = Kategori::latest()->get();
+        $ktgr = DB::table('kategoris')->select('kategori')->where('id', $tempat->kategori)->first();
+        //dd($ktg);
+        return view('backend/tempat/edit', compact('tempat', 'kategori', 'ktgr'));
     }
 
     /**
@@ -94,7 +139,26 @@ class TempatController extends Controller
      */
     public function update(Request $request, tempat $tempat)
     {
-        //
+        $request->validate([
+            'nama' => 'required',
+            'lokasi' => 'required',
+            'kategori' => 'required',
+            'deskripsi' => 'required',
+        ]);
+
+        tempat::where('id', $tempat->id)->update([
+            'nama' => $request->nama,
+            'lokasi' => $request->lokasi,
+            'kategori' => $request->kategori,
+            'deskripsi' => $request->deskripsi,
+            'konfirmasi' => $request->konfirmasi,
+        ]);
+
+        if($request->hasFile('thumbnail')){
+            $request->file('thumbnail')->move('thumbnails', $request->nama);
+        }
+
+        return redirect('/tempat');
     }
 
     /**
@@ -105,6 +169,17 @@ class TempatController extends Controller
      */
     public function destroy(tempat $tempat)
     {
-        //
+        tempat::destroy($tempat->id);
+        return back();
+    }
+    public function konfirmasi(Request $request, tempat $tempat)
+    {
+        $request->validate([
+            'konfirmasi' => 'required',
+        ]);
+        tempat::where('id', $tempat->id)->update([
+            'konfirmasi' => $request->konfirmasi,
+        ]);
+        return redirect('/tempat');
     }
 }
