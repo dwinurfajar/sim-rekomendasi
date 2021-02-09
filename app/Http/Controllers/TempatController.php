@@ -75,7 +75,7 @@ class TempatController extends Controller
         $tempat->save();
 
         if($request->hasFile('thumbnail')){
-            $request->file('thumbnail')->move('thumbnails', $request->thumbnail);
+            $request->file('thumbnail')->move('thumbnails', $request->nama);
         } 
         return redirect('/tempat');
     }
@@ -98,7 +98,7 @@ class TempatController extends Controller
         $tempat->save();
 
         if($request->hasFile('thumbnail')){
-            $request->file('thumbnail')->move('thumbnails', $request->thumbnail);
+            $request->file('thumbnail')->move('thumbnails', $request->nama);
         } 
 
         return redirect('/');

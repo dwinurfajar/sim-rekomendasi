@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Rating;
 use App\User;
+use App\tempat;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,20 @@ class RatingController extends Controller
         $rating->nilai = $request->nilai;
         $rating->ulasan = $request->ulasan;
         $rating->save();
+
+        
+        $rtg = DB::table('ratings')
+                ->groupBy('ratings.place_id')
+                ->select('ratings.place_id', Db::raw('avg(ratings.nilai) as rtg'))
+                ->where('ratings.place_id', '=',  $request->place_id)
+                ->get();
+        //dd($rtg);
+        $rtg[0]->rtg = number_format((float)$rtg[0]->rtg, 1, '.', '');
+
+        tempat::where('id', $request->place_id)->update([
+            'rating' => $rtg[0]->rtg,
+        ]);
+        
 
         //return redirect('/detail/$request->id');
         return back();

@@ -22,13 +22,17 @@
               <p class="card-text text-justify text-truncate para mb-2">{{$tmt->deskripsi}}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <span><i class="fas fa-map-marker-alt"></i> {{$tmt->lokasi}}</span>
+                @php
+                  $rating = round($tmt->rating);
+                @endphp
                 <div class="btn-group">
-                  
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star"></span>
-                  <span class="fa fa-star"></span>
+                  <span>{{$tmt->rating}}</span>
+                  @for($i = 0; $i < $rating; $i++)
+                    <span class="fa fa-star checked"></span>
+                  @endfor
+                  @for($i = 0; $i < 5 - $rating ; $i++)
+                    <span class="fa fa-star"></span>
+                  @endfor
                 </div>
                 
               </div>

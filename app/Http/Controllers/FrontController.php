@@ -12,15 +12,10 @@ class FrontController extends Controller
 {
     public function index()
     {
-        $tempat = DB::table('tempats')->get();
-                
-        
-        $rating = 4;
-                
-        //dd($rating);
+        $tempat = DB::table('tempats')->orderBy('rating', 'DESC')->get();
              
         $kategori = Kategori::latest()->get();
-        return view('/frontend/index', compact('tempat', 'rating', 'kategori'));
+        return view('/frontend/index', compact('tempat', 'kategori'));
     }
     public function detail(tempat $id){
     	$tempat = DB::table('tempats')->where('id', $id->id)->first();
@@ -32,9 +27,10 @@ class FrontController extends Controller
         $rating = DB::table('ratings')
                 ->join('users', 'ratings.user_id', '=', 'users.id')
                 ->where('ratings.place_id', $id->id)->avg('ratings.nilai');
+        //dd($rating);       
         $rating = number_format((float)$rating, 1, '.', '');
         $rating = ceil($rating);
-        //dd($rating);
+        
         $kategori = Kategori::latest()->get();
     	return view('frontend/detail', compact('tempat', 'ratings', 'rating', 'kategori'));	
     }

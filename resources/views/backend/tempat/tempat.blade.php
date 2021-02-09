@@ -17,6 +17,7 @@
                         <th>Lokasi</th>
                         <th>Kategori</th>
                         <th>Thumbnail</th>
+                        <th>Rating</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -27,6 +28,7 @@
                         <td>{{$ucf->lokasi}}</td>
                         <td>{{$ucf->ktg}}</td>
                         <td><img src="/thumbnails/{{$ucf->thumbnail}}" style="height: 50px; width: 80px;"></td>
+                        <td>{{$ucf->rating}}</td>
                         <td class="text-center text-white">
                             <form method="post" action="{{route('konfirmasi', $ucf->id)}}">
                                 @csrf
@@ -36,7 +38,7 @@
                             
                             <a type="button" href="{{route('tempat.show', $ucf->id)}}"  class="badge badge-info"><i class="fas fa-info-circle mr-1"></i>Detail</a>
                             <a type="button" href="{{route('tempat.edit', $ucf->id)}}" class="badge badge-success"><i class="fas fa-edit mr-1"></i>Edit</a>
-                            <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$ucf->id}}})"data-target="#DeleteModal" class="badge badge-danger"><i class="fa fa-trash mr-1"></i>Hapus</a>                                   
+                            <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$ucf->id}})"data-target="#DeleteModal" class="badge badge-danger"><i class="fa fa-trash mr-1"></i>Hapus</a>                                   
                         </td>
                     </tr>
                 @endforeach
@@ -60,6 +62,7 @@
                         <th>Lokasi</th>
                         <th>Kategori</th>
                         <th>Thumbnail</th>
+                        <th>Rating</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -70,6 +73,7 @@
                         <td>{{$tmt->lokasi}}</td>
                         <td>{{$tmt->ktg}}</td>
                         <td><img src="/thumbnails/{{$tmt->thumbnail}}" style="height: 50px; width: 80px;"></td>
+                        <td>{{$ucf->rating}}</td>
                         <td class="text-center text-white">
 
                             <a type="button" href="{{route('tempat.show', $tmt->id)}}"  class="badge badge-primary"><i class="fas fa-info-circle mr-1"></i>Detail</a>

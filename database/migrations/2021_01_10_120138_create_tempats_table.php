@@ -21,6 +21,10 @@ class CreateTempatsTable extends Migration
             $table->text('deskripsi');
             $table->string('thumbnail')->default('default-thumbnail.png');
             $table->boolean('konfirmasi')->default('0');
+            $table->float('rating')->default(0.0);
+            $table->integer('tiket')->default(0);
+            $table->time('buka')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->time('tutup')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
         });
     }
