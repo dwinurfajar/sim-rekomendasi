@@ -26,8 +26,8 @@ class KategoriController extends Controller
      */
     public function create()
     {
-        dd('asda');
-        //return view('backend/kategori/create');
+        //echo "string";
+        return view('backend/kategori/create');
     }
 
     /**

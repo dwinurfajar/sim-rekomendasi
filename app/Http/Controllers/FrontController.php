@@ -13,20 +13,30 @@ class FrontController extends Controller
     public function index()
     {
         $tempat = DB::table('tempats')->get();
-        $rating = 30;
+                
+        
+        $rating = 4;
+                
+        //dd($rating);
+             
         $kategori = Kategori::latest()->get();
         return view('/frontend/index', compact('tempat', 'rating', 'kategori'));
     }
     public function detail(tempat $id){
     	$tempat = DB::table('tempats')->where('id', $id->id)->first();
-        //$rating = DB::table('ratings')->where('place_id', $id->id)->get();
+
+        $ratings = DB::table('ratings')
+                ->join('users', 'ratings.user_id', '=', 'users.id')
+                ->where('ratings.place_id', $id->id)->get();
 
         $rating = DB::table('ratings')
                 ->join('users', 'ratings.user_id', '=', 'users.id')
-                ->where('ratings.place_id', $id->id)->get();
-        //dd($rtg);
+                ->where('ratings.place_id', $id->id)->avg('ratings.nilai');
+        $rating = number_format((float)$rating, 1, '.', '');
+        $rating = ceil($rating);
+        //dd($rating);
         $kategori = Kategori::latest()->get();
-    	return view('frontend/detail', compact('tempat', 'rating', 'kategori'));	
+    	return view('frontend/detail', compact('tempat', 'ratings', 'rating', 'kategori'));	
     }
     public function kategori($id)
     {

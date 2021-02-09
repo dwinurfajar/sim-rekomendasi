@@ -13,7 +13,8 @@
 
 Route::get('/', 'FrontController@index');
 Route::get('/detail/{id}', 'FrontController@detail')->name('detail');
-Route::get('/kategori/{id}', 'FrontController@kategori')->name('kategori');
+
+Route::get('/pilih-kategori/{id}', 'FrontController@kategori')->name('pilihkategori');
 Auth::routes();
 
 //Route::get('/admin', 'HomeController@index')->middleware(['admin','auth'])->name('admin');

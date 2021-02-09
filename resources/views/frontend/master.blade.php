@@ -47,38 +47,37 @@
   </head>
   <body>
     
-<header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-  <p class="h5 my-0 me-md-auto fw-normal">DWISATA</p>
+<header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-dark border-bottom shadow-sm">
+  <h3 class="text-light my-0 me-md-auto fw-normal"><strong>DWISATA</strong></h3>
 
-  <nav class="my-2 my-md-0 me-md-3 navbar">
-
-    <a class="p-2 text-dark" href="{{url('/')}}">Beranda</a>
+  <nav class="my-2 my-md-0 me-md-3 navbar ">
+    <a class="p-2 text-light" href="{{url('/')}}">Beranda</a>
     <div class="p-2 dropdown">
-      <a class="text-dark dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" >
+      <a class="text-light dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" >
         Kategori
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-        <a class="dropdown-item" href="#">Rekomendasi</a>
+        <a class="dropdown-item " href="#">Rekomendasi</a>
         @foreach ($kategori as $ktg)
-          <a class="dropdown-item" href="{{route('kategori', $ktg->id)}}">{{$ktg->kategori}}</a>
+          <a class="dropdown-item" href="{{route('pilihkategori', $ktg->id)}}">{{$ktg->kategori}}</a>
         @endforeach
       </div>
     </div> 
-    <a class="p-2 text-dark" href="#">Tentang</a>
+    <a class="p-2 text-light" href="#">Tentang</a>
 
     @guest
-      <a class="p-2 text-dark" href="{{ route('login') }}">{{ __('Login') }}</a>
+      <a class="p-2 text-light" href="{{ route('login') }}">{{ __('Login') }}</a>
     @if (Route::has('register'))
-                                    <a class="p-2 text-dark" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="p-2 text-light" href="{{ route('register') }}">{{ __('Register') }}</a>
     @endif
     @else
-      <a class="p-2 text-dark" href="{{route('tambah')}}">Tambah Tempat</a>
-      <div class="p-2 dropdown">
-        <a class="text-dark dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" >
+      <a class="p-2 text-light" href="{{route('tambah')}}">Tambah Tempat</a>
+      <div class="p-2 dropdown ">
+        <a class="text-light dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" >
          <i class="fas fa-user-alt"></i>
         </a>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-          <a class="dropdown-item" href="#">{{ Auth::user()->name }}</a>
+        <div class="dropdown-menu pull-right" aria-labelledby="dropdownMenuLink">
+          <span class="dropdown-item" href="#">{{ Auth::user()->name }}</span>
           <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
           <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
           @csrf
@@ -97,7 +96,7 @@
   <footer class="pt-4 my-md-5 pt-md-5 border-top">
     <div class="row">
       <div class="col-12 col-md">
-        <small class="d-block mb-3 text-muted">&copy; 2021</small>
+        <small class="d-block mb-3 text-muted">&copy; DYNATIC 2021</small>
       </div>
       <div class="col-6 col-md">
         <h5>Features</h5>
@@ -132,9 +131,11 @@
   </footer>
 </main>
 
+</body>
 
-    
-  </body>
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
 

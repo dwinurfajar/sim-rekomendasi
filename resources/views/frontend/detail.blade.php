@@ -7,29 +7,44 @@
 .checked {
   color: orange;
 }
+p {
+  white-space: pre-wrap; 
+}
 </style>
 
-<div class="card mb-3">
-  <img src="/thumbnails/{{$tempat->thumbnail}}" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h3 class="card-title">{{$tempat->nama}}</h3>
-    <div class="d-flex justify-content-between">
-    	<div class="d-flex">
-            <span class="ml-2"> <i class="fas fa-map-marker-alt"></i> {{$tempat->lokasi}}</span>
-                
-        </div>
-        <div>
-            @for($i = 0; $i < 4	; $i++)
-				<span class="fa fa-star checked"></span>
-			@endfor
-        </div>
-              
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-sm">
+      <img src="/thumbnails/{{$tempat->thumbnail}}" class="rounded float-left" alt="..." style="width: 100%; height: 300px;">
     </div>
-    <div class="mt-2">
-    	<p class="card-text">{{$tempat->deskripsi}}</p>
+    <div class="col-sm">
+		    <h3 class="mt-0">{{$tempat->nama}}</h3>
+		    <div class="d-flex justify-content-between">
+		    	<div class="d-flex">
+		            <span class="ml-2"> <i class="fas fa-map-marker-alt"></i> {{$tempat->lokasi}}</span>
+		                
+		        </div>
+		        <div>
+		        	<span>{{$rating}}/5</span>
+		            @for($i = 0; $i < $rating	; $i++)
+						<span class="fa fa-star checked"></span>
+					@endfor
+					@for($i = 0; $i < 5-$rating	; $i++)
+						<span class="fa fa-star"></span>
+					@endfor
+		        </div>
+		              
+		    </div>
+		    <div class="mt-2">
+		    	<p>{{$tempat->deskripsi}}</p>
+		    </div>
+
+
     </div>
   </div>
 </div>
+
+
 
 <?php
 $x = 0
@@ -39,7 +54,7 @@ $x = 0
 		$x = 0
 	?>
 @else
-	@foreach ($rating as $rtg)
+	@foreach ($ratings as $rtg)
 		@if($rtg->user_id == Auth::user()->id)
 			<?php
 				$x = 1
@@ -49,55 +64,57 @@ $x = 0
 @endguest
 
 @if( $x == 0 )
-<label>Rating</label>
-<div class="mb-3">
+<div class="container">
+	<label>Rating</label>
+	<div class="mb-3">
 
-	<form class="rating" action="{{route('rating.store')}}" method="post">
-		@csrf
-	  <label>
-	    <input type="radio" name="nilai" value="1" />
-	    <span class="icon">★</span>
-	  </label>
-	  <label>
-	    <input type="radio" name="nilai" value="2" />
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>
-	  </label>
-	  <label>
-	    <input type="radio" name="nilai" value="3" />
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>   
-	  </label>
-	  <label>
-	    <input type="radio" name="nilai" value="4" />
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>
-	  </label>
-	  <label>
-	    <input type="radio" name="nilai" value="5" />
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>
-	    <span class="icon">★</span>
-	  </label>
+		<form class="rating" action="{{route('rating.store')}}" method="post">
+			@csrf
+		  <label>
+		    <input type="radio" name="nilai" value="1" />
+		    <span class="icon">★</span>
+		  </label>
+		  <label>
+		    <input type="radio" name="nilai" value="2" />
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>
+		  </label>
+		  <label>
+		    <input type="radio" name="nilai" value="3" />
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>   
+		  </label>
+		  <label>
+		    <input type="radio" name="nilai" value="4" />
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>
+		  </label>
+		  <label>
+		    <input type="radio" name="nilai" value="5" />
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>
+		    <span class="icon">★</span>
+		  </label>
+	</div>
+	<div class="mb-3">
+	  <label  class="form-label">Ulas</label>
+	  <textarea class="form-control" name="ulasan" rows="3"></textarea>
+	  <input type="hidden" name="place_id" value="{{$tempat->id}}">
+	</div>
+	<button type="submit" class="btn-primary">
+		  	Simpan</button>
+	</form>
+	@endif
 </div>
-<div class="mb-3">
-  <label  class="form-label">Ulas</label>
-  <textarea class="form-control" name="ulasan" rows="3"></textarea>
-  <input type="hidden" name="place_id" value="{{$tempat->id}}">
-</div>
-<button type="submit" class="btn-primary">
-	  	Simpan</button>
-</form>
-@endif
 
-	<div class="mb-3 mt-3">
+<div class="container mb-3 mt-3">
 	<label  class="form-label">Ulasan</label>
-	@foreach ($rating as $rtg)
+	@foreach ($ratings as $rtg)
 		<div class="card mt-2">
 			<div class="card-header">
 				{{$rtg->name}}
@@ -110,6 +127,8 @@ $x = 0
 					<span class="fa fa-star"></span>
 				@endfor
 				<p class="small">{{$rtg->ulasan}}</p>
+				<p class="small">{{$rtg->created_at}}</p>
+
 			</div>
 			
 			

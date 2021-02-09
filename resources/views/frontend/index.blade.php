@@ -6,11 +6,11 @@
     <p class="lead">Quickly build an effective pricing table for your potential customers with this Bootstrap example. It’s built with default Bootstrap components and utilities with little customization.</p>
   </div>
 
-  <div class="album py-5 bg-light">
+
     <div class="container">
 
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        @foreach ($tempat as $tmt)
+        @foreach ($tempat as $tmt )
         <div class="col row-3">
 
           <div class="card shadow-sm">
@@ -23,6 +23,7 @@
               <div class="d-flex justify-content-between align-items-center">
                 <span><i class="fas fa-map-marker-alt"></i> {{$tmt->lokasi}}</span>
                 <div class="btn-group">
+                  
                   <span class="fa fa-star checked"></span>
                   <span class="fa fa-star checked"></span>
                   <span class="fa fa-star checked"></span>
@@ -38,7 +39,7 @@
         @endforeach
       </div>
     </div>
-  </div>
+
 @endsection
 
 
