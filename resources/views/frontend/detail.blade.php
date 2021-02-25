@@ -12,7 +12,7 @@ p {
 }
 </style>
 
-<div class="container mt-3">
+<div class="container mt-5">
   <div class="row">
     <div class="col-sm">
       <img src="/thumbnails/{{$tempat->thumbnail}}" class="rounded float-left" alt="..." style="width: 100%; height: 300px;">
@@ -35,7 +35,7 @@ p {
 		        </div>
 		              
 		    </div>
-		    <div class="mt-2">
+		    <div class="mt-2 border-top">
 		    	<p>{{$tempat->deskripsi}}</p>
 		    </div>
 
@@ -44,7 +44,41 @@ p {
   </div>
 </div>
 
+<div class="container mt-5 border-top">
+	<label>Tempat Wisata Terkait</label>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+    	@foreach ($terkait as $trk)
+        <div class="col row-2">
+          	<div class="card shadow-sm">
+            	<a href="">
+            		<img style="width: 100%; height: 150px;" src="/thumbnails/{{$trk->thumbnail}}" >
+            	</a>
+            	<div class="card-body">
+	              	<h4>{{$trk->nama}}</h4>
+	              	<div class="d-flex justify-content-between align-items-center">
+	                	<span class="text-truncate col-4"><i class="fas fa-map-marker-alt"></i> {{$trk->lokasi}}</span>
+	                	<div class="btn-group">
+	                		@php
+			                  $rating = round($trk->rating);
+			                @endphp
+		                	<span>{{$trk->rating}}/5</span>
+					            @for($i = 0; $i < $rating	; $i++)
+									<span class="fa fa-star checked"></span>
+								@endfor
+								@for($i = 0; $i < 5-$rating	; $i++)
+									<span class="fa fa-star"></span>
+								@endfor
+	                	</div>
+	                
+	              	</div>
+            	</div>
+          	</div>
+        </div>
+        @endforeach
 
+
+    </div>
+</div>
 
 <?php
 $x = 0
@@ -64,7 +98,7 @@ $x = 0
 @endguest
 
 @if( $x == 0 )
-<div class="container">
+<div class="container mt-5 border-top">
 	<label>Rating</label>
 	<div class="mb-3">
 

@@ -1,9 +1,9 @@
 @extends('frontend/master')
-@section('title', 'Beranda')
+@section('title', 'Kategori')
 @section('content')
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">Rekomendasi</h1>
-    <p class="lead">.</p>
+    <h1 class="display-4">{{$ktg}}</h1>
+    <p class="lead"></p>
   </div>
 
 
@@ -45,6 +45,3 @@
     </div>
 
 @endsection
-
-
-

@@ -93,7 +93,13 @@
   @yield('content')
 
 
-  <footer class="pt-4 my-md-5 pt-md-5 border-top">
+  
+</main>
+
+</body>
+
+<footer class="pt-4 my-md-5 pt-md-7 border-top">
+  <div class="container">
     <div class="row">
       <div class="col-12 col-md">
         <small class="d-block mb-3 text-muted">&copy; DYNATIC 2021</small>
@@ -128,11 +134,9 @@
         </ul>
       </div>
     </div>
+  </div>
+    
   </footer>
-</main>
-
-</body>
-
 
 
 

@@ -73,7 +73,7 @@
                         <td>{{$tmt->lokasi}}</td>
                         <td>{{$tmt->ktg}}</td>
                         <td><img src="/thumbnails/{{$tmt->thumbnail}}" style="height: 50px; width: 80px;"></td>
-                        <td>{{$ucf->rating}}</td>
+                        <td>{{$tmt->rating}}</td>
                         <td class="text-center text-white">
 
                             <a type="button" href="{{route('tempat.show', $tmt->id)}}"  class="badge badge-primary"><i class="fas fa-info-circle mr-1"></i>Detail</a>
