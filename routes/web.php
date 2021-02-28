@@ -14,6 +14,7 @@
 Route::get('/', 'FrontController@index');
 Route::get('/detail/{id}', 'FrontController@detail')->name('detail');
 Route::get('/acs', 'FrontController@acs')->name('acs');
+Route::get('/ws', 'FrontController@weight_sum')->name('ws');
 
 Route::get('/pilih-kategori/{id}', 'FrontController@kategori')->name('pilihkategori');
 Auth::routes();

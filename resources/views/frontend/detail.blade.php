@@ -51,6 +51,7 @@ p {
         <div class="col row-2">
           	<div class="card shadow-sm">
             	<a href="">
+            		<a href="{{route('detail',$trk->id)}}">
             		<img style="width: 100%; height: 150px;" src="/thumbnails/{{$trk->thumbnail}}" >
             	</a>
             	<div class="card-body">

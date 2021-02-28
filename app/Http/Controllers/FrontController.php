@@ -165,7 +165,13 @@ class FrontController extends Controller
                 }   
             }
         }
-        //dd($top, $bot1, $bot2);
         dd($sim_table);
+        return $sim_table;
+    }
+
+    public function weight_sum()
+    {
+        $data = $this->acs();
+        dd($data);
     }
 }
