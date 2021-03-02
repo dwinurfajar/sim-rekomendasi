@@ -11,6 +11,22 @@ p {
   white-space: pre-wrap; 
 }
 </style>
+<?php
+$x = 0
+?>
+@guest
+	<?php
+		$x = 0
+	?>
+@else
+	@foreach ($ratings as $rtg)
+		@if($rtg->user_id == Auth::user()->id)
+			<?php
+				$x = 1
+			?>
+		@endif
+	@endforeach
+@endguest
 
 <div class="container mt-5">
   <div class="row">
@@ -43,7 +59,44 @@ p {
     </div>
   </div>
 </div>
+@if($x == 1 && $rekomendasi != null)
+<div class="container mt-5 border-top">
+	<label>Rekomendasi</label>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+    	@foreach ($rekomendasi as $rek)
+        <div class="col row-2">
+          	<div class="card shadow-sm">
+            	<a href="">
+            		<a href="{{route('detail',$rek->id)}}">
+            		<img style="width: 100%; height: 150px;" src="/thumbnails/{{$rek->thumbnail}}" >
+            	</a>
+            	<div class="card-body">
+	              	<h4>{{$rek->nama}}</h4>
+	              	<div class="d-flex justify-content-between align-items-center">
+	                	<span class="text-truncate col-4"><i class="fas fa-map-marker-alt"></i> {{$rek->lokasi}}</span>
+	                	<div class="btn-group">
+	                		@php
+			                  $rating = round($rek->rating);
+			                @endphp
+		                	<span>{{$rek->rating}}/5</span>
+					            @for($i = 0; $i < $rating	; $i++)
+									<span class="fa fa-star checked"></span>
+								@endfor
+								@for($i = 0; $i < 5-$rating	; $i++)
+									<span class="fa fa-star"></span>
+								@endfor
+	                	</div>
+	                
+	              	</div>
+            	</div>
+          	</div>
+        </div>
+        @endforeach
 
+
+    </div>
+</div>	
+@endif
 <div class="container mt-5 border-top">
 	<label>Tempat Wisata Terkait</label>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
@@ -81,22 +134,7 @@ p {
     </div>
 </div>
 
-<?php
-$x = 0
-?>
-@guest
-	<?php
-		$x = 0
-	?>
-@else
-	@foreach ($ratings as $rtg)
-		@if($rtg->user_id == Auth::user()->id)
-			<?php
-				$x = 1
-			?>
-		@endif
-	@endforeach
-@endguest
+
 
 @if( $x == 0 )
 <div class="container mt-5 border-top">

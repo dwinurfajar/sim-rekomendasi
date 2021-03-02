@@ -63,7 +63,7 @@
         @endforeach
       </div>
     </div> 
-    <a class="p-2 text-light" href="#">Tentang</a>
+    <a class="p-2 text-light" href="{{route('tentang')}}">Tentang</a>
 
     @guest
       <a class="p-2 text-light" href="{{ route('login') }}">{{ __('Login') }}</a>

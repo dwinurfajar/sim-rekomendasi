@@ -5,6 +5,7 @@ use App\tempat;
 use App\Rating;
 use App\User;
 use App\Kategori;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -42,7 +43,13 @@ class FrontController extends Controller
                 ->orderBy('rating', 'DESC')
                 ->get();
         //dd($terkait);
-    	return view('frontend/detail', compact('tempat', 'ratings', 'rating', 'kategori', 'terkait'));	
+        $rekomendasi = $this->weight_sum();
+    	return view('frontend/detail', compact('tempat', 'ratings', 'rating', 'kategori', 'terkait', 'rekomendasi'));	
+    }
+    public function tentang()
+    {
+        $kategori = Kategori::latest()->get();
+        return view('frontend/tentang', compact('kategori'));
     }
     public function kategori($id){
         //dd($id);
@@ -107,7 +114,7 @@ class FrontController extends Controller
                 }else{
                     //echo "no data found";
                 }
-                echo("<br>");
+                #echo("<br>");
 
                 if (sizeof($user) > 1) {
                     $data[][] = array();
@@ -137,12 +144,12 @@ class FrontController extends Controller
                     //echo("uku: ".sizeof($data)."<br>");
                     for ($k=0; $k < sizeof($user); $k++) { 
                         $top[$k] = ($data[$k][2]-$data[$k][1])*($data[$k][3]-$data[$k][1]);
-                        echo("ru,i ".$data[$k][2]." ru ".$data[$k][1]." ru,j ".$data[$k][3]." ru ".$data[$k][1]." hasil ".$top[$k]."<br>");
+                        //echo("ru,i ".$data[$k][2]." ru ".$data[$k][1]." ru,j ".$data[$k][3]." ru ".$data[$k][1]." hasil ".$top[$k]."<br>");
 
                         $bot1[$k] = pow($data[$k][2]-$data[$k][1], 2);
-                        echo("<br>"."bot 1 ".$bot1[$k])."<br>";
+                        //echo("<br>"."bot 1 ".$bot1[$k])."<br>";
                         $bot2[$k] = pow($data[$k][3]-$data[$k][1], 2);
-                        echo("<br>"."bot 2 ".$bot2[$k])."<br>";
+                        //echo("<br>"."bot 2 ".$bot2[$k])."<br>";
                     }
                     $pembilang = 0;
                     $penyebut1 = 0;
@@ -154,8 +161,8 @@ class FrontController extends Controller
                         $penyebut2 += $bot2[$k];
                         
                     }
-                    echo($pembilang."<br>");
-                    echo(sqrt($penyebut1)."x".sqrt($penyebut2)."<br>");
+                    //echo($pembilang."<br>");
+                    //echo(sqrt($penyebut1)."x".sqrt($penyebut2)."<br>");
 
                     $hasil = $pembilang/(sqrt($penyebut1)*sqrt($penyebut2));    
                     $sim_table[$increment][0] = $plc[$i];
@@ -165,13 +172,121 @@ class FrontController extends Controller
                 }   
             }
         }
-        dd($sim_table);
+        //dd($sim_table);
         return $sim_table;
     }
 
     public function weight_sum()
     {
-        $data = $this->acs();
-        dd($data);
+        $x = array();
+        $y = array();
+        $hsl = array();
+        $acs = $this->acs();
+        #filter acs > 0
+        for ($i=0; $i < sizeof($acs); $i++) { 
+            if ($acs[$i][2] > -2) {
+                $data1[$i] = $i;
+                $place_a[$i] = $acs[$i][0];
+                $place_b[$i] = $acs[$i][1];
+                $acs2[$i][0] = $acs[$i][0];
+                $acs2[$i][1] = $acs[$i][2];
+                $acs2[$i][2] = $acs[$i][2];
+                
+            }
+        }
+        $data1 = array_values($data1);
+        $acs2 = array_values($acs2);
+
+        $place_a = array_unique($place_a);
+        $place_b = array_unique($place_b);
+
+        $place_a = array_values($place_a);
+        $place_b = array_values($place_b);
+
+        $user = Auth::user();
+        $place = DB::table('tempats')
+                ->select('id')
+                ->get();
+        $rating = DB::table('ratings')
+                ->select('place_id')
+                ->where('user_id', $user->id)
+                ->get();
+
+        for ($i=0; $i < sizeof($place); $i++) { 
+            $x[$i] = $place[$i]->id;
+            //echo($x[$i]);
+        }
+        for ($i=0; $i < sizeof($rating); $i++) { 
+            $y[$i] = $rating[$i]->place_id;
+            //echo($y[$i]);
+        }
+        $rated = array_intersect($x, $y);
+        $unrated = array_diff($x, $y);
+        $rated = array_values($rated);
+        $unrated = array_values($unrated);
+
+        $itrsct_1 = array();
+        $itrsct_2 = array();
+        $itrsct_3 = array();
+        $itrsct_4 = array();
+        $intrsct_rated = array();
+
+        $itrsct_1 = array_intersect($place_a, $rated);
+        $itrsct_2 = array_intersect($place_b, $rated);
+
+        $itrsct_3 = array_intersect($place_a, $unrated);
+        $itrsct_4 = array_intersect($place_b, $unrated);
+
+        $intrsct_rated = array_merge($itrsct_1, $itrsct_2);
+        $intrsct_unrated = array_merge($itrsct_3, $itrsct_4);
+
+        $intrsct_rated = array_unique($intrsct_rated);
+        $intrsct_unrated = array_unique($intrsct_unrated);
+
+        $intrsct_rated = array_values($intrsct_rated);
+        $intrsct_unrated = array_values($intrsct_unrated);
+
+       
+        //echo(sizeof($acs));
+        $state = 0;
+        for ($i=0; $i < sizeof($intrsct_rated); $i++) { 
+            for ($j=0; $j < sizeof($acs); $j++) { 
+                if ($intrsct_rated[$i] == $acs[$j][0]) {
+                    for ($k=0; $k < sizeof($intrsct_unrated); $k++) { 
+                        if ($intrsct_unrated[$k] == $acs[$j][1]) {
+                            //echo($intrsct_rated[$i]." to ".$intrsct_unrated[$k]);
+                            $final[$k][0] = $intrsct_rated[$i];
+                            $final[$k][1] = $intrsct_unrated[$k];
+                            $state = 1;
+                        }
+                    }
+                }
+            }
+        }
+        if ($state == 1) {
+            $final = array_values($final);
+            for ($i=0; $i < sizeof($final); $i++) { 
+                $rekomendasi = DB::table('tempats')
+                        ->where('id', $final[$i][1])
+                        ->get();
+            }
+            return $rekomendasi;
+        }else{
+            $rekomendasi = null;
+            //dd($rekomendasi);
+            return $rekomendasi;
+        }
+        
+        /*dd("acs ", $acs, 
+            "acs2 ", $acs2, 
+            "rated", $rated, 
+            "unrated", $unrated, 
+            "plc a", $place_a, 
+            "plc b", $place_b, 
+            "int rat", $intrsct_rated,
+            "int unrat", $intrsct_unrated); */
+        //dd($val);
+
+        
     }
 }
