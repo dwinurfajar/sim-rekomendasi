@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'FrontController@index');
+Route::get('/', 'FrontController@index')->name('home');
 Route::get('/detail/{id}', 'FrontController@detail')->name('detail');
 Route::get('/tentang', 'FrontController@tentang')->name('tentang');
 Route::get('/acs', 'FrontController@acs')->name('acs');
@@ -31,6 +31,7 @@ Route::get('/user', 'HomeController@user')->name('user');
 Route::resource('rating', 'RatingController')->middleware(['auth']);
 
 Route::resource('kategori', 'KategoriController')->middleware(['admin','auth']);
+Route::get('dashboard', 'KategoriController@dashboard')->name('dashboard')->middleware(['admin','auth']);
 
 //Route::get('/tempat/{nama}/edit', 'TempatController@edit');
 

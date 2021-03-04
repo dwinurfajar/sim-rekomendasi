@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Kategori;
+use App\tempat;
+use App\Rating;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -104,5 +107,15 @@ class KategoriController extends Controller
     {
         Kategori::destroy($kategori->id);
         return back();
+    }
+
+    public function dashboard()
+    {
+        $tempat = tempat::all()
+                ->count();
+        $user = User::all()
+                ->count();
+        //dd($user);
+        return view('backend/dashboard', compact('tempat', 'user'));
     }
 }

@@ -43,7 +43,12 @@ class FrontController extends Controller
                 ->orderBy('rating', 'DESC')
                 ->get();
         //dd($terkait);
-        $rekomendasi = $this->weight_sum();
+        if (Auth::user()) {
+            $rekomendasi = $this->weight_sum();
+        }else{
+            $rekomendasi = null;
+        }
+        
     	return view('frontend/detail', compact('tempat', 'ratings', 'rating', 'kategori', 'terkait', 'rekomendasi'));	
     }
     public function tentang()
