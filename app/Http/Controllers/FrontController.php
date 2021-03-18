@@ -154,7 +154,6 @@ class FrontController extends Controller
                     for ($k=0; $k < sizeof($user); $k++) { 
                         $top[$k] = ($data[$k][2]-$data[$k][1])*($data[$k][3]-$data[$k][1]);
                         //echo("ru,i ".$data[$k][2]." ru ".$data[$k][1]." ru,j ".$data[$k][3]." ru ".$data[$k][1]." hasil ".$top[$k]."<br>");
-
                         $bot1[$k] = pow($data[$k][2]-$data[$k][1], 2);
                         //echo("<br>"."bot 1 ".$bot1[$k])."<br>";
                         $bot2[$k] = pow($data[$k][3]-$data[$k][1], 2);
@@ -173,7 +172,7 @@ class FrontController extends Controller
                     //echo($pembilang."<br>");
                     //echo(sqrt($penyebut1)."x".sqrt($penyebut2)."<br>");
 
-                    $hasil = $pembilang/(sqrt($penyebut1)*sqrt($penyebut2));    
+                    $hasil = $pembilang/(sqrt($penyebut1)*sqrt($penyebut2));//similarity equation 
                     $sim_table[$increment][0] = $plc[$i];
                     $sim_table[$increment][1] = $plc[$j];
                     $sim_table[$increment][2] = $hasil;
@@ -264,23 +263,8 @@ class FrontController extends Controller
         //echo(sizeof($acs));
         #find place_id for recommend
         $final = array();
-        $state = 0;/*
-        for ($i=0; $i < sizeof($rated); $i++) {
-            //echo(",i:".$i."=========<br>");
-            for ($j=0; $j < sizeof($acs2); $j++) { 
-                if ($rated[$i] == $acs2[$j][0]) {
-                    //echo(",j:".$j."<br>");
-                    for ($k=0; $k < sizeof($unrated); $k++) { 
-                        if ($unrated[$k] == $acs2[$j][1]) {
-                            echo($rated[$i]." to ".$unrated[$k]);
-                            $final[$k][0] = $rated[$i];
-                            $final[$k][1] = $unrated[$k];
-                            $state = 1;
-                        }
-                    }
-                }
-            }
-        }*/
+        $state = 0;
+
         //dd($acs2);
         $count = 0;
         for ($i=0; $i < sizeof($acs2); $i++) { #for all data acs
@@ -288,9 +272,10 @@ class FrontController extends Controller
                 if ($acs2[$i][0] == $rated[$j]) {#check place A = rated
                     for ($k=0; $k < sizeof($unrated); $k++) { #for all data unrated
                         if ($acs2[$i][1] == $unrated[$k]) {#check place A = unrated
-                           // echo("up:".$acs2[$i][0]." to ".$acs2[$i][1]."<br>");
+                            //echo("up:".$acs2[$i][0]." to ".$acs2[$i][1]."<br>");
                             $final[$count][0] = $acs2[$i][0];#save data final result
                             $final[$count][1] = $acs2[$i][1];
+                            $final[$count][2] = $acs2[$i][2];
                             $count++;
                         }
                     }
@@ -300,6 +285,7 @@ class FrontController extends Controller
                             //echo("bot:".$acs2[$i][0]." to ".$acs2[$i][1]."<br>");
                             $final[$count][0] = $acs2[$i][1];#save data final result
                             $final[$count][1] = $acs2[$i][0];
+                            $final[$count][2] = $acs2[$i][2];
                             $count++;
                         }
                     }
@@ -319,7 +305,6 @@ class FrontController extends Controller
             return $rekomendasi;
         }else{
             $rekomendasi = null;
-            //dd($rekomendasi);
             return $rekomendasi;
         }
         //$final = [1, 2, 3];
