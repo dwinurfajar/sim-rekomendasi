@@ -16,7 +16,8 @@ class FrontController extends Controller
         $tempat = DB::table('tempats')
                 ->orderBy('rating', 'DESC')
                 ->where('konfirmasi', '1')
-                ->get();
+                ->paginate(6);
+                
              
         $kategori = Kategori::latest()->get();
         return view('/frontend/index', compact('tempat', 'kategori'));
@@ -26,7 +27,7 @@ class FrontController extends Controller
         
         $ratings = DB::table('ratings')
                 ->join('users', 'ratings.user_id', '=', 'users.id')
-                ->where('ratings.place_id', $id->id)->get();
+                ->where('ratings.place_id', $id->id)->paginate(6);
 
         $rating = DB::table('ratings')
                 ->join('users', 'ratings.user_id', '=', 'users.id')
@@ -70,7 +71,7 @@ class FrontController extends Controller
         return view('/frontend/kategori', compact('tempat', 'rating', 'kategori', 'ktg'));
     }
     public function acs(){
-        //get place_id with ratings
+        #get place_id with ratings
         $place = DB::table('ratings')
                 ->select('place_id')
                 ->get();
@@ -80,14 +81,15 @@ class FrontController extends Controller
         }
         $plc = array_unique($plc);
         $plc = array_values($plc);
-        
-        //find similarity beetwen a to b
+        sort($plc);
+        //dd($plc);
+        #find similarity beetwen a to b
         $increment = 0;
         $sim_table[][] = array();
         for ($i=0; $i < sizeof($plc)-1; $i++) { 
             for ($j=$i+1; $j < sizeof($plc); $j++) { 
                 //echo($plc[$i]." to ". $plc[$j]."<br>");
-                //find user with rating a and b
+                #find user with rating a and b
                 $cos = [1, 4];
                 $usr1 =  DB::table('ratings')
                         ->select('user_id')
@@ -120,7 +122,7 @@ class FrontController extends Controller
                     //echo "no data found";
                 }
                 #echo("<br>");
-
+                #get user id, average, rating a, rating b
                 if (sizeof($user) > 1) {
                     $data[][] = array();
                     for ($k=0; $k < sizeof($user); $k++) { 
@@ -146,7 +148,9 @@ class FrontController extends Controller
                         $data[$k][3] = $val2[0]->nilai;
                         //echo($avg[0]->avg);
                     }
+                    //dd($data);
                     //echo("uku: ".sizeof($data)."<br>");
+                    #find value for acs equation
                     for ($k=0; $k < sizeof($user); $k++) { 
                         $top[$k] = ($data[$k][2]-$data[$k][1])*($data[$k][3]-$data[$k][1]);
                         //echo("ru,i ".$data[$k][2]." ru ".$data[$k][1]." ru,j ".$data[$k][3]." ru ".$data[$k][1]." hasil ".$top[$k]."<br>");
@@ -178,65 +182,70 @@ class FrontController extends Controller
             }
         }
         //dd($sim_table);
+        #return acs table
         return $sim_table;
     }
 
     public function weight_sum()
     {
+       //echo("asdasda");
         $x = array();
         $y = array();
         $hsl = array();
-        $acs = $this->acs();
+        $acs = $this->acs();#get acs table from acs function
         #filter acs > 0
         for ($i=0; $i < sizeof($acs); $i++) { 
-            if ($acs[$i][2] > -2) {
+            if ($acs[$i][2] > 0) {
                 $data1[$i] = $i;
                 $place_a[$i] = $acs[$i][0];
                 $place_b[$i] = $acs[$i][1];
                 $acs2[$i][0] = $acs[$i][0];
-                $acs2[$i][1] = $acs[$i][2];
+                $acs2[$i][1] = $acs[$i][1];
                 $acs2[$i][2] = $acs[$i][2];
                 
             }
         }
+        #sorting data acs
         $data1 = array_values($data1);
         $acs2 = array_values($acs2);
-
+        //dd($acs2);
         $place_a = array_unique($place_a);
         $place_b = array_unique($place_b);
 
         $place_a = array_values($place_a);
         $place_b = array_values($place_b);
 
-        $user = Auth::user();
-        $place = DB::table('tempats')
+        $user = Auth::user();#get user id (when already log in)
+        $place = DB::table('tempats')#get all place_id
                 ->select('id')
                 ->get();
-        $rating = DB::table('ratings')
+        $rating = DB::table('ratings')#get place_id by user_id
                 ->select('place_id')
                 ->where('user_id', $user->id)
                 ->get();
-
-        for ($i=0; $i < sizeof($place); $i++) { 
+        //dd($rating);
+        //echo("x "."<br>");
+        for ($i=0; $i < sizeof($place); $i++) { #json to array
             $x[$i] = $place[$i]->id;
-            //echo($x[$i]);
+            //echo($x[$i]."+");
         }
-        for ($i=0; $i < sizeof($rating); $i++) { 
+        //echo("<br>"."y "."<br>");
+        for ($i=0; $i < sizeof($rating); $i++) { #json to array
             $y[$i] = $rating[$i]->place_id;
-            //echo($y[$i]);
+            //echo($y[$i]."+");
         }
-        $rated = array_intersect($x, $y);
-        $unrated = array_diff($x, $y);
+        $rated = array_intersect($x, $y);#find place already rated by user
+        $unrated = array_diff($x, $y);#find place unrated by user
         $rated = array_values($rated);
-        $unrated = array_values($unrated);
-
+        $unrated = array_values($unrated);#sorting array
+        #declare array
         $itrsct_1 = array();
         $itrsct_2 = array();
         $itrsct_3 = array();
         $itrsct_4 = array();
         $intrsct_rated = array();
 
-        $itrsct_1 = array_intersect($place_a, $rated);
+        $itrsct_1 = array_intersect($place_a, $rated);#
         $itrsct_2 = array_intersect($place_b, $rated);
 
         $itrsct_3 = array_intersect($place_a, $unrated);
@@ -251,25 +260,57 @@ class FrontController extends Controller
         $intrsct_rated = array_values($intrsct_rated);
         $intrsct_unrated = array_values($intrsct_unrated);
 
-       
+        //dd( "acs2", $acs2,"rated", $rated,"unrated", $unrated, "plc a", $place_a, "plc b", $place_b);
         //echo(sizeof($acs));
-        $state = 0;
-        for ($i=0; $i < sizeof($intrsct_rated); $i++) { 
-            for ($j=0; $j < sizeof($acs); $j++) { 
-                if ($intrsct_rated[$i] == $acs[$j][0]) {
-                    for ($k=0; $k < sizeof($intrsct_unrated); $k++) { 
-                        if ($intrsct_unrated[$k] == $acs[$j][1]) {
-                            //echo($intrsct_rated[$i]." to ".$intrsct_unrated[$k]);
-                            $final[$k][0] = $intrsct_rated[$i];
-                            $final[$k][1] = $intrsct_unrated[$k];
+        #find place_id for recommend
+        $final = array();
+        $state = 0;/*
+        for ($i=0; $i < sizeof($rated); $i++) {
+            //echo(",i:".$i."=========<br>");
+            for ($j=0; $j < sizeof($acs2); $j++) { 
+                if ($rated[$i] == $acs2[$j][0]) {
+                    //echo(",j:".$j."<br>");
+                    for ($k=0; $k < sizeof($unrated); $k++) { 
+                        if ($unrated[$k] == $acs2[$j][1]) {
+                            echo($rated[$i]." to ".$unrated[$k]);
+                            $final[$k][0] = $rated[$i];
+                            $final[$k][1] = $unrated[$k];
                             $state = 1;
                         }
                     }
                 }
             }
+        }*/
+        //dd($acs2);
+        $count = 0;
+        for ($i=0; $i < sizeof($acs2); $i++) { #for all data acs
+            for ($j=0; $j < sizeof($rated); $j++) { #for all data rated
+                if ($acs2[$i][0] == $rated[$j]) {#check place A = rated
+                    for ($k=0; $k < sizeof($unrated); $k++) { #for all data unrated
+                        if ($acs2[$i][1] == $unrated[$k]) {#check place A = unrated
+                           // echo("up:".$acs2[$i][0]." to ".$acs2[$i][1]."<br>");
+                            $final[$count][0] = $acs2[$i][0];#save data final result
+                            $final[$count][1] = $acs2[$i][1];
+                            $count++;
+                        }
+                    }
+                }elseif ($acs2[$i][1] == $rated[$j]) {#check place B = rated
+                    for ($k=0; $k < sizeof($unrated); $k++) { #for all data unrated
+                        if ($acs2[$i][0] == $unrated[$k]) {#check place B = unrated
+                            //echo("bot:".$acs2[$i][0]." to ".$acs2[$i][1]."<br>");
+                            $final[$count][0] = $acs2[$i][1];#save data final result
+                            $final[$count][1] = $acs2[$i][0];
+                            $count++;
+                        }
+                    }
+                }
+            }
         }
+        //echo($count);
+        dd($final);
         if ($state == 1) {
             $final = array_values($final);
+            
             for ($i=0; $i < sizeof($final); $i++) { 
                 $rekomendasi = DB::table('tempats')
                         ->where('id', $final[$i][1])
@@ -281,15 +322,10 @@ class FrontController extends Controller
             //dd($rekomendasi);
             return $rekomendasi;
         }
+        //$final = [1, 2, 3];
+        //dd($final);
+        //dd($final);
         
-        /*dd("acs ", $acs, 
-            "acs2 ", $acs2, 
-            "rated", $rated, 
-            "unrated", $unrated, 
-            "plc a", $place_a, 
-            "plc b", $place_b, 
-            "int rat", $intrsct_rated,
-            "int unrat", $intrsct_unrated); */
         //dd($val);
 
         

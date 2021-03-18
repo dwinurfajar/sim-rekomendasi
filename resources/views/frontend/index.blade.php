@@ -2,7 +2,7 @@
 @section('title', 'Beranda')
 @section('content')
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">Rekomendasi</h1>
+    <h1 class="display-4">Destinasi Unggulan</h1>
     <p class="lead">.</p>
   </div>
 
@@ -41,7 +41,12 @@
           </div>
         </div>
         @endforeach
+
       </div>
+      {{-- Pagination --}}
+        <div class="d-flex justify-content-center">
+            {!! $tempat->links() !!}
+        </div>
     </div>
 
 @endsection

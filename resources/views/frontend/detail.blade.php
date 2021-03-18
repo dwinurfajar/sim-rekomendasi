@@ -211,6 +211,10 @@ $x = 0
 	@endforeach
 
 </div>
+{{-- Pagination --}}
+        <div class="d-flex justify-content-center">
+            {!! $ratings->links() !!}
+        </div>
 
 
 <script type="text/javascript">
