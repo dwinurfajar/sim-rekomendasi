@@ -16,6 +16,7 @@ Route::get('/detail/{id}', 'FrontController@detail')->name('detail');
 Route::get('/tentang', 'FrontController@tentang')->name('tentang');
 Route::get('/acs', 'FrontController@acs')->name('acs');
 Route::get('/ws', 'FrontController@weight_sum')->name('ws');
+Route::get('/rekomendasi', 'FrontController@rekomendasi')->name('rekomendasi')->middleware(['auth']);
 
 Route::get('/pilih-kategori/{id}', 'FrontController@kategori')->name('pilihkategori');
 Auth::routes();

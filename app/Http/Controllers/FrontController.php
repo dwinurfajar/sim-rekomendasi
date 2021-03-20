@@ -42,10 +42,22 @@ class FrontController extends Controller
                 ->where('kategori', '=', $tempat->kategori)
                 ->where('id', '!=', $id->id)
                 ->orderBy('rating', 'DESC')
+                ->take(5)
                 ->get();
         //dd($terkait);
         if (Auth::user()) {
-            $rekomendasi = $this->weight_sum();
+            $data_fix = $this->weight_sum();
+            if ($data_fix != null) {    
+            $rekomendasi = DB::table('tempats')
+                        ->whereIn('id', $data_fix)#get place
+                        ->take(5)
+                        ->get();
+            
+
+            }else{
+                $rekomendasi = null;
+                
+            }
         }else{
             $rekomendasi = null;
         }
@@ -59,7 +71,7 @@ class FrontController extends Controller
     }
     public function kategori($id){
         //dd($id);
-        $tempat = DB::table('tempats')->where('kategori', $id)->get();
+        $tempat = DB::table('tempats')->where('kategori', $id)->paginate(6);
         $rating = 30;
         $kategori = Kategori::latest()->get();
         $ktg = DB::table('kategoris')
@@ -69,6 +81,27 @@ class FrontController extends Controller
         $ktg = $ktg[0]->kategori;
         //dd($ktg[0]->kategori);
         return view('/frontend/kategori', compact('tempat', 'rating', 'kategori', 'ktg'));
+
+    }
+    public function rekomendasi(){
+        $kategori = Kategori::latest()->get();
+        if (Auth::user()) {
+            $data_fix = $this->weight_sum();
+            if ($data_fix != null) {    
+            $rekomendasi = DB::table('tempats')
+                        ->whereIn('id', $data_fix)#get place
+                        ->paginate(6);
+            
+
+            }else{
+                $rekomendasi = null;
+                
+            }
+        }else{
+            $rekomendasi = null;
+        }
+        //d($rekomendasi);
+        return view('/frontend/rekomendasi', compact('kategori','rekomendasi'));
     }
     public function acs(){
         #get place_id with ratings
@@ -277,6 +310,7 @@ class FrontController extends Controller
                             $final[$count][1] = $acs2[$i][1];
                             $final[$count][2] = $acs2[$i][2];
                             $count++;
+                            $state = 1;
                         }
                     }
                 }elseif ($acs2[$i][1] == $rated[$j]) {#check place B = rated
@@ -287,32 +321,41 @@ class FrontController extends Controller
                             $final[$count][1] = $acs2[$i][0];
                             $final[$count][2] = $acs2[$i][2];
                             $count++;
+                            $state = 1;
                         }
                     }
                 }
             }
         }
         //echo($count);
-        dd($final);
-        if ($state == 1) {
-            $final = array_values($final);
-            
-            for ($i=0; $i < sizeof($final); $i++) { 
-                $rekomendasi = DB::table('tempats')
-                        ->where('id', $final[$i][1])
-                        ->get();
-            }
-            return $rekomendasi;
-        }else{
-            $rekomendasi = null;
-            return $rekomendasi;
+        //dd(sizeof($final));
+        
+        for ($i=0; $i < sizeof($final); $i++) { 
+            $data[$i] = $final[$i][1];
         }
-        //$final = [1, 2, 3];
-        //dd($final);
-        //dd($final);
-        
-        //dd($val);
-
-        
+        $data = array_unique($data);
+        sort($data);
+        $data = array_values($data);
+        $count = 0;
+        $temp = 0;
+        for ($i=0; $i < sizeof($data); $i++) { 
+            for ($j=0; $j < sizeof($final); $j++) { 
+                if ($data[$i] == $final[$j][1] ) {
+                    $temp += $final[$j][2];
+                    $count++;
+                }
+            }
+            $f_data[$i][0] = $data[$i];
+            $f_data[$i][1] = $temp/$count;#find average/mean
+            $count = 0;
+            $temp = 0;
+        }
+        //dd($f_data);
+        array_multisort( array_column($f_data, 1), SORT_DESC, $f_data );#sort descending
+        for ($i=0; $i < sizeof($f_data); $i++) { 
+            $data_fix[$i] = $f_data[$i][0];#find place_id
+        }
+        //dd($f_data);
+        return $data_fix;
     }
 }

@@ -57,7 +57,7 @@
         Kategori
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-        <a class="dropdown-item " href="#">Rekomendasi</a>
+        <a class="dropdown-item " href="{{route('rekomendasi')}}">Rekomendasi</a>
         @foreach ($kategori as $ktg)
           <a class="dropdown-item" href="{{route('pilihkategori', $ktg->id)}}">{{$ktg->kategori}}</a>
         @endforeach
@@ -111,7 +111,7 @@
       </div>
       <div class="col-3 col">
         <h5>Hubungi Kami</h5>
-          <p>ifa.puspita@students.amikom.ac.id</p>
+          <p>ifa.puspitasari@students.amikom.ac.id</p>
       </div>
     </div>
   </div>
