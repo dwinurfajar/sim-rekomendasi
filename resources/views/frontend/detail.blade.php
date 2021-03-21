@@ -19,7 +19,7 @@ $x = 0
 		$x = 0
 	?>
 @else
-	@foreach ($ratings as $rtg)
+	@foreach ($ratingss as $rtg)
 		@if($rtg->user_id == Auth::user()->id)
 			<?php
 				$x = 1

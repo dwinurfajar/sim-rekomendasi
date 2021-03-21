@@ -29,6 +29,10 @@ class FrontController extends Controller
                 ->join('users', 'ratings.user_id', '=', 'users.id')
                 ->where('ratings.place_id', $id->id)->paginate(6);
 
+        $ratingss = DB::table('ratings')
+                ->join('users', 'ratings.user_id', '=', 'users.id')
+                ->where('ratings.place_id', $id->id)->get();
+
         $rating = DB::table('ratings')
                 ->join('users', 'ratings.user_id', '=', 'users.id')
                 ->where('ratings.place_id', $id->id)->avg('ratings.nilai');
@@ -62,7 +66,7 @@ class FrontController extends Controller
             $rekomendasi = null;
         }
         
-    	return view('frontend/detail', compact('tempat', 'ratings', 'rating', 'kategori', 'terkait', 'rekomendasi'));	
+    	return view('frontend/detail', compact('tempat', 'ratings', 'ratingss','rating', 'kategori', 'terkait', 'rekomendasi'));	
     }
     public function tentang()
     {
@@ -329,7 +333,7 @@ class FrontController extends Controller
         }
         //echo($count);
         //dd(sizeof($final));
-        
+        $data = array();
         for ($i=0; $i < sizeof($final); $i++) { 
             $data[$i] = $final[$i][1];
         }
