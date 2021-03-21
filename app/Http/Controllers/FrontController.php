@@ -354,6 +354,7 @@ class FrontController extends Controller
                 if ($data[$i] == $final[$j][1] ) {
                     $temp1 += $final[$j][2];
                     $temp2 += $final[$j][3];
+                    //echo($temp2."+".$count."<br>");
                     $count++;
                 }
             }
@@ -363,10 +364,12 @@ class FrontController extends Controller
             $f_data[$i][3] = ($f_data[$i][2]*$f_data[$i][1])/$f_data[$i][1];#wight sum
 
             $count = 0;
-            $temp = 0;
+            $temp1 = 0;
+            $temp2= 0;
         }
         //dd($f_data);
         array_multisort( array_column($f_data, 3), SORT_DESC, $f_data );#sort descending
+        //dd($f_data);
         for ($i=0; $i < sizeof($f_data); $i++) { 
             $data_fix[$i] = $f_data[$i][0];#find place_id
         }
