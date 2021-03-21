@@ -8,7 +8,7 @@
 
 
     <div class="container">
-
+      @if($rekomendasi != null)
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         @foreach ($rekomendasi as $rkm )
         <div class="col row-3">
@@ -47,7 +47,7 @@
         <div class="d-flex justify-content-center">
             {!! $rekomendasi->links() !!}
         </div>
-
+      @endif
     </div>
 
 @endsection

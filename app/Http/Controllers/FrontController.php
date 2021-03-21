@@ -349,6 +349,8 @@ class FrontController extends Controller
         $count = 0;
         $temp1 = 0;
         $temp2 = 0;
+
+        $f_data = array();
         for ($i=0; $i < sizeof($data); $i++) { 
             for ($j=0; $j < sizeof($final); $j++) { 
                 if ($data[$i] == $final[$j][1] ) {
@@ -370,10 +372,11 @@ class FrontController extends Controller
         //dd($f_data);
         array_multisort( array_column($f_data, 3), SORT_DESC, $f_data );#sort descending
         //dd($f_data);
+        $data_fix = array();
         for ($i=0; $i < sizeof($f_data); $i++) { 
             $data_fix[$i] = $f_data[$i][0];#find place_id
         }
-        //dd($f_data);
+        //dd($data_fix);
         return $data_fix;
     }
 }
