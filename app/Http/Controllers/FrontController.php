@@ -313,6 +313,9 @@ class FrontController extends Controller
                             $final[$count][0] = $acs2[$i][0];#save data final result
                             $final[$count][1] = $acs2[$i][1];
                             $final[$count][2] = $acs2[$i][2];
+                            $temp = DB::table('tempats')->select('rating')->where('id', $acs2[$i][0])->first();
+                            $final[$count][3] = $temp->rating;
+                            //echo($temp->rating);
                             $count++;
                             $state = 1;
                         }
@@ -324,6 +327,9 @@ class FrontController extends Controller
                             $final[$count][0] = $acs2[$i][1];#save data final result
                             $final[$count][1] = $acs2[$i][0];
                             $final[$count][2] = $acs2[$i][2];
+                            $temp = DB::table('tempats')->select('rating')->where('id', $acs2[$i][0])->first();
+                            $final[$count][3] = $temp->rating;
+                            //echo($temp->rating);
                             $count++;
                             $state = 1;
                         }
@@ -341,21 +347,26 @@ class FrontController extends Controller
         sort($data);
         $data = array_values($data);
         $count = 0;
-        $temp = 0;
+        $temp1 = 0;
+        $temp2 = 0;
         for ($i=0; $i < sizeof($data); $i++) { 
             for ($j=0; $j < sizeof($final); $j++) { 
                 if ($data[$i] == $final[$j][1] ) {
-                    $temp += $final[$j][2];
+                    $temp1 += $final[$j][2];
+                    $temp2 += $final[$j][3];
                     $count++;
                 }
             }
             $f_data[$i][0] = $data[$i];
-            $f_data[$i][1] = $temp/$count;#find average/mean
+            $f_data[$i][1] = $temp1/$count;#find average/mean
+            $f_data[$i][2] = $temp2/$count;#find average/mean
+            $f_data[$i][3] = ($f_data[$i][2]*$f_data[$i][1])/$f_data[$i][1];#wight sum
+
             $count = 0;
             $temp = 0;
         }
         //dd($f_data);
-        array_multisort( array_column($f_data, 1), SORT_DESC, $f_data );#sort descending
+        array_multisort( array_column($f_data, 3), SORT_DESC, $f_data );#sort descending
         for ($i=0; $i < sizeof($f_data); $i++) { 
             $data_fix[$i] = $f_data[$i][0];#find place_id
         }
