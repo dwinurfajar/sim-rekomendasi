@@ -123,11 +123,28 @@ class FrontController extends Controller
         #find similarity beetwen a to b
         $increment = 0;
         $sim_table[][] = array();
+        $usr = DB::table("ratings")->select('user_id', 'place_id')->get();
         for ($i=0; $i < sizeof($plc)-1; $i++) { 
             for ($j=$i+1; $j < sizeof($plc); $j++) { 
                 //echo($plc[$i]." to ". $plc[$j]."<br>");
                 #find user with rating a and b
-                $cos = [1, 4];
+                $x = array();
+                $y = array();
+                
+                $countX=0;
+                $countY=0;
+                for ($k=0; $k < sizeof($usr); $k++) { 
+                    if ($usr[$k]->place_id == $plc[$i]) {
+                        $x[$countX] = $usr[$k]->user_id;
+                        $countX++;
+                    }
+                    elseif ($usr[$k]->place_id == $plc[$j]) {
+                        $y[$countY] = $usr[$k]->user_id;
+                        $countY++;
+                    }
+                }
+
+                /*
                 $usr1 =  DB::table('ratings')
                         ->select('user_id')
                         ->where('place_id', $plc[$i])
@@ -137,17 +154,19 @@ class FrontController extends Controller
                         ->select('user_id')
                         ->where('place_id', $plc[$j])
                         ->get();
-
-                $x = array();
+                //dd($usr2);
+                
+                
                 for ($k=0; $k < sizeof($usr1); $k++) { 
                     $x[$k] = $usr1[$k]->user_id;
                     //echo("x:".$x[$k]);
                 }
-                $y = array();
+                
                 for ($l=0; $l < sizeof($usr2); $l++) { 
                     $y[$l] = $usr2[$l]->user_id;
                     //echo("y".$y[$l]);
                 }
+                */
                 $user = array_intersect($x, $y);
                 $user = array_values($user);
                 if (sizeof($user) > 0) {
@@ -160,6 +179,7 @@ class FrontController extends Controller
                 }
                 #echo("<br>");
                 #get user id, average, rating a, rating b
+                $ratingg = DB::table('ratings')->get();//dd($ratigg);
                 if (sizeof($user) > 1) {
                     $data[][] = array();
                     for ($k=0; $k < sizeof($user); $k++) { 
@@ -168,6 +188,16 @@ class FrontController extends Controller
                                 ->groupBy('user_id')
                                 ->where('user_id', $user[$k])
                                 ->get();
+
+                        for ($l=0; $l < sizeof($ratingg); $l++) { 
+                            if (($ratingg[$l]->place_id == $plc[$i]) && ($ratingg[$l]->user_id == $avg[0]->user_id)) {
+                                $val1 = $ratingg[$i]->nilai;
+                            }
+                            elseif (($ratingg[$l]->place_id == $plc[$j]) && ($ratingg[$l]->user_id == $avg[0]->user_id)) {
+                                $val2 = $ratingg[$i]->nilai;
+                            }
+                        }
+                        /*
                         $val1 =  DB::table('ratings')
                                 ->select('nilai')
                                 ->where('place_id', $plc[$i])
@@ -178,11 +208,14 @@ class FrontController extends Controller
                                 ->where('place_id', $plc[$j])
                                 ->where('user_id', $avg[0]->user_id)
                                 ->get();
+                        */
                         //index data: 0 user_id, 1 average, 2 rating a, 3 rating b
                         $data[$k][0] = $avg[0]->user_id;
                         $data[$k][1] = $avg[0]->avg;
-                        $data[$k][2] = $val1[0]->nilai;
-                        $data[$k][3] = $val2[0]->nilai;
+                        $data[$k][2] = $val1;
+                        $data[$k][3] = $val2;
+                        //$data[$k][2] = $val1[0]->nilai;
+                        //$data[$k][3] = $val2[0]->nilai;
                         //echo($avg[0]->avg);
                     }
                     //dd($data);
@@ -303,6 +336,7 @@ class FrontController extends Controller
         $state = 0;
 
         //dd($acs2);
+        $tempp = DB::table('tempats')->select('id', 'rating')->get();
         $count = 0;
         for ($i=0; $i < sizeof($acs2); $i++) { #for all data acs
             for ($j=0; $j < sizeof($rated); $j++) { #for all data rated
@@ -313,8 +347,13 @@ class FrontController extends Controller
                             $final[$count][0] = $acs2[$i][0];#save data final result
                             $final[$count][1] = $acs2[$i][1];
                             $final[$count][2] = $acs2[$i][2];
-                            $temp = DB::table('tempats')->select('rating')->where('id', $acs2[$i][0])->first();
-                            $final[$count][3] = $temp->rating;
+                            for ($l=0; $l < sizeof($tempp); $l++) { 
+                                if($tempp[$l]->id == $acs2[$i][0]){
+                                    $final[$count][3] = $tempp[$l]->rating;
+                                }
+                            }
+                            //$temp = DB::table('tempats')->select('rating')->where('id', $acs2[$i][0])->first();
+                            //$final[$count][3] = $temp->rating;
                             //echo($temp->rating);
                             $count++;
                             $state = 1;
@@ -327,8 +366,13 @@ class FrontController extends Controller
                             $final[$count][0] = $acs2[$i][1];#save data final result
                             $final[$count][1] = $acs2[$i][0];
                             $final[$count][2] = $acs2[$i][2];
-                            $temp = DB::table('tempats')->select('rating')->where('id', $acs2[$i][0])->first();
-                            $final[$count][3] = $temp->rating;
+                            for ($l=0; $l < sizeof($tempp); $l++) { 
+                                if($tempp[$l]->id == $acs2[$i][0]){
+                                    $final[$count][3] = $tempp[$l]->rating;
+                                }
+                            }
+                            //$temp = DB::table('tempats')->select('rating')->where('id', $acs2[$i][0])->first();
+                            //$final[$count][3] = $temp->rating;
                             //echo($temp->rating);
                             $count++;
                             $state = 1;
